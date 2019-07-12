@@ -27,16 +27,29 @@ traversalPath = []
 
 # create Graph
 graph = {
-  0: {'n': '?', 's': '?', 'w': '?', 'e': '?'}
-}
+          0: {'n': '?', 's': '?', 'w': '?', 'e': '?'},
+         
+        }
 
 # create Direction to move
 direction_to_move = 'n'
-
 # print move
 print(f"Moved {direction_to_move}")
-# print travel
-print(player.travel(direction_to_move))
+# travel to desired direction
+player.travel(direction_to_move)
+# print current room
+print(f"This is our current room {player.currentRoom}")
+
+graph = {
+          0: {'n': 1, 's': '?', 'w': '?', 'e': '?'},
+          1: {'n': '?', 's': 0, 'w': '?', 'e': '?'}
+        }
+
+direction_to_move = 'n'
+player.travel(direction_to_move)
+print(f"Moved {direction_to_move}")
+print(f"This is our current room {player.currentRoom}")
+
 
 # TRAVERSAL TEST
 visited_rooms = set()
