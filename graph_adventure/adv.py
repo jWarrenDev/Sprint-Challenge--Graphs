@@ -17,6 +17,7 @@ roomGraph={0: [(3, 5), {'n': 1, 's': 5, 'e': 3, 'w': 7}], 1: [(3, 6), {'s': 0, '
 world.loadGraph(roomGraph)
 world.printRooms()
 player = Player("Name", world.startingRoom)
+visited_rooms = set()
 
 print(f"My Starting room: {player.currentRoom}")
 
@@ -29,6 +30,37 @@ personalMap = { 0: {'n': '?', 's': '?', 'w': '?', 'e': '?'}}
 
 # create inverse directions so that I can go back and forth on my  map
 inverseDirections = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
+
+#create a stack for the paths you are taking.  Maybe you can pop them off.  hmm..?
+pathStack = []
+
+### personal map needs to have the same number of rooms as the roomGraph
+while len(personalMap) < len(roomGraph) :
+
+    currentRoom = player.currentRoom
+    numberExits = personalMap[currentRoom.id]
+
+    # print(numberExits)
+    # print(currentRoom)
+
+    #travel the map and keep count of unexplored exits
+    unexplored = []
+    for exit in player.currentRoom.getExits():
+        personalMap[player.currentRoom.id] = '?' 
+
+
+    # how many more rooms you need to go
+    print(f"You need to walk around bro. There are {len(numberExits)} exits")
+    print(f"you got {len(roomGraph) - len(personalMap)} unvisited rooms to go ")
+    break
+
+
+
+
+
+
+
+
 
 
 
@@ -65,7 +97,7 @@ inverseDirections = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
 
 
 # TRAVERSAL TEST
-visited_rooms = set()
+# visited_rooms = set()
 player.currentRoom = world.startingRoom
 visited_rooms.add(player.currentRoom)
 
