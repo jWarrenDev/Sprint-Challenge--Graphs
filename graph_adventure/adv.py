@@ -22,6 +22,7 @@ visited_rooms = set()
 print(f"My Starting room: {player.currentRoom}")
 
 
+
 # # FILL THIS IN
 traversalPath = []
 
@@ -49,12 +50,17 @@ while len(personalMap) < len(roomGraph) :
     for exit in player.currentRoom.getExits():
         if numberExits[exit] == '?':
             unexplored.append(exit) 
-
-        print(unexplored)
+        # else:
+        #     player.travel[unexplored]
+        print(f"These are the unexplored exits {unexplored}")
 
     # choose one of the unexplored exits. Random if you want.
     # for now just choose the first direction in the array.
     
+    if len(unexplored) > 0:
+
+        oldRoom = player.currentRoom.id
+
         directionToMove = unexplored[0]
         player.travel(directionToMove)
         traversalPath.append(directionToMove)
@@ -62,20 +68,35 @@ while len(personalMap) < len(roomGraph) :
 
         newRoom = player.currentRoom.id
 
-
-
-    #add path to the stack
-        pathStack.append(directionToMove)
-        print(f"This is our current room {newRoom}")
-        print(f"This is your path so far from room the starting room {pathStack}")
-
     # Add the room to the personal map. 
     #personalMap.update({{player.currentRoom}}) # doesnt work
 
+        if newRoom not in personalMap:
+            newRoomExits = {}
+            for exit in player.currentRoom.getExits():
+                newRoomExits[exit] = '?'
+            personalMap[newRoom] = newRoomExits
+
+        personalMap[oldRoom][directionToMove] = newRoom
+        personalMap[newRoom][inverseDirections[directionToMove]] = oldRoom
+
+
+    else:
+        if len(pathStack) > 0:
+            oldDirection = pathStack.pop()
+            
+            backwards = inverseDirections[oldDirection]
+            player.travel(backwards)
+            traversalPath.append(backwards)
+
+
+    #add path to the stack
+    pathStack.append(directionToMove)
+    print(f"Your current room is room #{newRoom}")
+    print(f"This is your path so far from room the starting room {pathStack}")
+       
 
     
-
-
 
     # how many more rooms you need to go
     print(f"You need to walk around bro. There are {len(numberExits)} exits")
