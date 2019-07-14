@@ -44,9 +44,35 @@ while len(personalMap) < len(roomGraph) :
     # print(currentRoom)
 
     #travel the map and keep count of unexplored exits
+    # its an array so cycle through them. 
     unexplored = []
     for exit in player.currentRoom.getExits():
-        personalMap[player.currentRoom.id] = '?' 
+        if numberExits[exit] == '?':
+            unexplored.append(exit) 
+
+    print(unexplored)
+
+    # choose one of the unexplored exits. Random if you want.
+    # for now just choose the first direction in the array.
+    
+    directionToMove = unexplored[0]
+    player.travel(directionToMove)
+    traversalPath.append(directionToMove)
+    print(f"Moved {directionToMove}")
+
+    newRoom = player.currentRoom.id
+
+    #add path to the stack
+    pathStack.append(directionToMove)
+    print(f"This is our current room {newRoom}")
+    print(f"This is your path so far from room the starting room {pathStack}")
+
+    # Add the room to the personal map. 
+    #personalMap.update({{player.currentRoom}}) # doesnt work
+
+
+    
+
 
 
     # how many more rooms you need to go
