@@ -17,11 +17,9 @@ roomGraph={0: [(3, 5), {'n': 1, 's': 5, 'e': 3, 'w': 7}], 1: [(3, 6), {'s': 0, '
 world.loadGraph(roomGraph)
 world.printRooms()
 player = Player("Name", world.startingRoom)
-visited_rooms = set()
+#visited_rooms = set()
 
 print(f"My Starting room: {player.currentRoom}")
-
-
 
 # # FILL THIS IN
 traversalPath = []
@@ -29,7 +27,8 @@ traversalPath = []
 # create personalMap of vistied points on the graph
 personalMap = { 0: {'n': '?', 's': '?', 'w': '?', 'e': '?'}}
 
-# create inverse directions so that I can go back and forth on my  map
+# create inverse directions so that I can go back and forth on my map
+# you have to pop these off a stack later. 
 inverseDirections = {'n': 's', 's': 'n', 'w': 'e', 'e': 'w'}
 
 #create a stack for the paths you are taking.  Maybe you can pop them off.  hmm..?
@@ -45,30 +44,40 @@ while len(personalMap) < len(roomGraph) :
     # print(currentRoom)
 
     #travel the map and keep count of unexplored exits
-    # its an array so cycle through them. 
+    # its an array so cycle through them. #this actually doesn't work. use getExits
     unexplored = []
+
+    print(f"You have {len(roomGraph) - len(personalMap)} unvisited rooms to go ")
+
     for exit in player.currentRoom.getExits():
         if numberExits[exit] == '?':
             unexplored.append(exit) 
         # else:
         #     player.travel[unexplored]
-        print(f"These are the unexplored exits {unexplored}")
+    print(f"You are counting the number of unexplored exits in room #{currentRoom.id}.  Currently the exits are {unexplored} ")
 
     # choose one of the unexplored exits. Random if you want.
     # for now just choose the first direction in the array.
     
     if len(unexplored) > 0:
 
+        # string of old room, cookie trail
         oldRoom = player.currentRoom.id
-
+        
         directionToMove = unexplored[0]
         player.travel(directionToMove)
         traversalPath.append(directionToMove)
-        print(f"Moved {directionToMove}")
+        print(f"You have to decided to move in direction {directionToMove}")
+
+        #add direction to the path stack
+        pathStack.append(directionToMove)
+        print(f"Your path so for {pathStack}")
 
         newRoom = player.currentRoom.id
+        print(f"You are currently in room # {newRoom}")
 
     # Add the room to the personal map. 
+    # Add the exits of the room to the personal map. 
     #personalMap.update({{player.currentRoom}}) # doesnt work
 
         if newRoom not in personalMap:
@@ -79,41 +88,27 @@ while len(personalMap) < len(roomGraph) :
 
         personalMap[oldRoom][directionToMove] = newRoom
         personalMap[newRoom][inverseDirections[directionToMove]] = oldRoom
-
-
+        print(f"Your old room was # {oldRoom}")
+        
     else:
         if len(pathStack) > 0:
+            # choose the last direction added to the stack and pop it off. 
             oldDirection = pathStack.pop()
             
+            # set backwards to the inverse of the direction traveled. 
+            # then use that direction and travel
+            # then append to traversal path
             backwards = inverseDirections[oldDirection]
             player.travel(backwards)
+            print(f"You just traveled in the direction {backwards} to room # {player.currentRoom.id}")
+          
             traversalPath.append(backwards)
-
-
-    #add path to the stack
-    pathStack.append(directionToMove)
-    print(f"Your current room is room #{newRoom}")
-    print(f"This is your path so far from room the starting room {pathStack}")
-       
-
+            print(f"Your current room is {player.currentRoom.id}")
+  
+print(f"Your current room is room #{newRoom}")
+print(f"This is your path so far from room the starting room {traversalPath}")
     
-
-    # how many more rooms you need to go
-    print(f"You need to walk around bro. There are {len(numberExits)} exits")
-    print(f"you got {len(roomGraph) - len(personalMap)} unvisited rooms to go ")
-    break
         
-
-
-
-
-
-
-
-
-
-
-
 # # create Direction to move
 # direction_to_move = 'n'
 # # print move
@@ -147,7 +142,7 @@ while len(personalMap) < len(roomGraph) :
 
 
 # TRAVERSAL TEST
-# visited_rooms = set()
+visited_rooms = set()
 player.currentRoom = world.startingRoom
 visited_rooms.add(player.currentRoom)
 
@@ -165,9 +160,9 @@ else:
 
 
 
-######
-# UNCOMMENT TO WALK AROUND
-######
+#####
+#UNCOMMENT TO WALK AROUND
+#####
 # player.currentRoom.printRoomDescription(player)
 # while True:
 #     cmds = input("-> ").lower().split(" ")
